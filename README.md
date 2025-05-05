@@ -110,8 +110,9 @@ Open your browser at: http://localhost:8080
 ## API Reference
 ```bash
 GET /route/:lineId/arrivals
-Fetches the latest estimated bus arrivals for a given route.
 ```
+Fetches the latest estimated bus arrivals for a given route.
+
 Sample Response:
 ```json
 
