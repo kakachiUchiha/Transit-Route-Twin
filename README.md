@@ -193,7 +193,3 @@ git push origin feature/my-feature
 ### License
 MIT License © SFAXI Mohamed Khalil
 
-### Badges Breakdown:
-1. **Node.js Badge**: Shows the supported Node.js version.
-2. **MIT License Badge**: Indicates the license under which the project is released.
-3. **GitHub Repo Badge**: Quick access to the GitHub repository.
