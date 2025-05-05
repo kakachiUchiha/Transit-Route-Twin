@@ -50,7 +50,9 @@ Frontend (JS)
 - Map View
 - Timeline View
 
-## Installation
+---
+
+## Installation 
 
 ### Clone the repository:
 
