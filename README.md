@@ -50,3 +50,10 @@ Frontend (JS)
 - Map View
 - Timeline View
 
+## Installation
+
+### Clone the repository:
+
+```bash
+git clone https://github.com/youruser/transit-route-twin.git
+cd transit-route-twin
