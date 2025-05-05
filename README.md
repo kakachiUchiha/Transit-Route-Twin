@@ -1,127 +1,114 @@
-# Transit-Route Twin
+Transit-Route Twin
 
-Simulez les arrivées en temps réel et les retards de bus pour n’importe quel réseau de transport urbain.
+Simulate a bus route’s real-time arrivals and delays for any city's transit system
 
----
+Table of Contents
 
-## Table des matières
+Overview
+Features
+Architecture
+Installation
+Configuration
+Usage
+API Reference
+How It Works
+Contributing
+License
+Overview
 
-- [Présentation](#présentation)
-- [Fonctionnalités](#fonctionnalités)
-- [Architecture](#architecture)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Utilisation](#utilisation)
-- [API Reference](#api-reference)
-- [Fonctionnement](#fonctionnement)
-- [Contribuer](#contribuer)
-- [Licence](#licence)
+Transit-Route Twin is a lightweight service that simulates live bus arrivals and delays by polling a public transit API, storing results in real-time, and broadcasting updates over WebSockets. Originally built using the Transport for London Live Bus Arrivals API, it can be extended to any city's transit system with minimal effort.
 
----
+Features
 
-## Présentation
+Real-Time Polling: Periodically fetches next-bus ETAs for a given route.
+WebSocket Push: Broadcasts updates to connected clients instantly.
+Flexible Frontend: Renders interactive maps or timelines in JavaScript.
+Modular Design: Separate polling, storage, and rendering layers for easy customization.
+Lightweight & Simple: Single REST call per route; standardized JSON responses; no specialized hardware required.
+Architecture
 
-**Transit-Route Twin** est un service léger qui simule les arrivées et retards de bus en temps réel. Il interroge une API de transport public, stocke les résultats, puis diffuse les mises à jour en direct via WebSockets.
++-------------+      +--------------+      +------------+
 
-Initialement conçu pour l’API *Transport for London (TfL) Live Bus Arrivals*, il peut facilement être adapté à n’importe quel réseau de transport urbain.
+| Polling     | ---> | Real-Time    | ---> | WebSocket  |
 
----
+| Service     |      | Store        |      | Broadcaster|
 
-## Fonctionnalités
++-------------+      +--------------+      +------------+
 
-- **Interrogation en temps réel** : récupère régulièrement les ETA (Estimated Time of Arrival) des bus pour une ligne donnée.
-- **Diffusion WebSocket** : envoie instantanément les mises à jour aux clients connectés.
-- **Frontend flexible** : rend des cartes interactives ou des timelines en JavaScript.
-- **Architecture modulaire** : séparation des couches de polling, de stockage et d'affichage.
-- **Léger et simple** : une seule requête REST par ligne, réponses JSON standardisées.
+                             |
 
----
+                             v
 
-## Architecture
-+-------------+ +--------------+ +----------------+
-| Polling | ---> | Real-Time | ---> | WebSocket |
-| Service | | Store | | Broadcaster |
-+-------------+ +--------------+ +----------------+
-|
-v
-Frontend (JS)
-(Map View / Timeline View)
+                        Frontend (JS)
 
----
+                    (Map / Timeline UI)
 
-## Installation
+Installation
 
-1. Clonez le dépôt :
-   ```bash
-   git clone https://github.com/youruser/transit-route-twin.git
-   cd transit-route-twin
-Installez les dépendances :
-
-Backend (Node.js) :
+Clone the repository
+git clone https://github.com/youruser/transit-route-twin.git
+cd transit-route-twin
+Install dependencies
+Backend (Node.js example):
 cd server
 npm install
-
-Frontend :
-cd ../client
+Frontend:
+cd client
 npm install
-Ouvrez ensuite votre navigateur à l’adresse :
-http://localhost:8080 (ou le port configuré)
+Configuration
 
+Copy and customize .env.example to .env in the server/ directory:
+TFL_APP_ID=your_tfl_app_id
+TFL_APP_KEY=your_tfl_app_key
+POLL_INTERVAL_MS=10000
+PORT=3000
+(Optional) Update base URL for other cities:
+API_BASE_URL=https://api.tfl.gov.uk/Line/{lineId}/Arrivals
+Usage
+
+Start the backend
+cd server
+npm start
+Start the frontend
+cd client
+npm start
+Open your browser at http://localhost:8080 (or configured port)
 API Reference
+
 GET /route/:lineId/arrivals
-Renvoie la liste des arrivées de bus estimées pour une ligne donnée.
+Fetches the latest list of estimated bus arrivals for a given line.
+Response: Array of objects containing:
+vehicleId
+lineId
+destinationName
+expectedArrival (ISO 8601 timestamp)
+timeToStation (in seconds)
+How It Works
 
-Réponse :
-
-json
-Copier
-Modifier
-[
-  {
-    "vehicleId": "1234",
-    "lineId": "25",
-    "destinationName": "Oxford Circus",
-    "expectedArrival": "2025-05-05T15:32:00Z",
-    "timeToStation": 240
-  },
-  ...
-]
-Fonctionnement
 Polling Service
-Envoie régulièrement des requêtes GET à l’API TfL :
-
-arduino
-Copier
-Modifier
+Periodically sends a GET request to the Transport for London API at:
 https://api.tfl.gov.uk/Line/{lineId}/Arrivals
-Les données JSON sont ensuite normalisées.
-
+Parses the JSON response and normalizes fields.
 Real-Time Store
-Maintient un stockage en mémoire (ou Redis) des dernières prédictions.
-Émet des mises à jour uniquement en cas de changement réel.
-
+Maintains an in-memory (or Redis) store of the latest predictions.
+Updates only when there are changes to avoid unnecessary broadcasts.
 WebSocket Broadcaster
-Diffuse les mises à jour vers tous les clients abonnés à un ou plusieurs lineId.
-
+On store update, emits events to all subscribed WebSocket clients.
+Clients can subscribe to one or more lineIds.
 Frontend Renderer
-Se connecte au serveur WebSocket et affiche les données :
+Connects to the WebSocket endpoint.
+Receives live updates and renders them:
+Map View: Pins on a map showing approaching buses.
+Timeline View: A horizontal timeline representing upcoming arrivals.
+Contributing
 
-Vue Carte : emplacements des bus en approche.
+Contributions are welcome! Please open issues or pull requests for new features, bug fixes, or improvements.
 
-Vue Timeline : chronologie horizontale des prochaines arrivées.
+Fork the repository
+Create your feature branch (git checkout -b feature/foo)
+Commit your changes (git commit -am 'Add foo feature')
+Push to the branch (git push origin feature/foo)
+Open a pull request
+License
 
-Contribuer
-Les contributions sont les bienvenues !
-
-Forkez le dépôt
-
-Créez une branche (git checkout -b feature/ma-feature)
-
-Commitez vos modifications (git commit -am 'Ajout de ma feature')
-
-Poussez la branche (git push origin feature/ma-feature)
-
-Ouvrez une pull request
-
-Licence
-MIT License © SFAXI Mohamed Khalil
+MIT License © Your Name
