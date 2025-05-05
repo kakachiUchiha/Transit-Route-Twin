@@ -1,5 +1,9 @@
 # Transit-Route Twin
 
+![Node.js](https://img.shields.io/badge/Node.js-12.x-brightgreen)
+![MIT License](https://img.shields.io/badge/License-MIT-blue)
+![GitHub Repo](https://img.shields.io/badge/Repo-GitHub-blue)
+
 Simulate real-time bus arrivals and delays for any city’s transit system.
 
 ---
@@ -39,23 +43,145 @@ Originally built for the Transport for London (TfL) Live Bus Arrivals API, it ca
 
 ## Architecture
 
-```text
-+-----------+     +------------+     +----------------+
-| Polling   | --> | Real-Time  | --> | WebSocket      |
-| Service   |     | Store      |     | Broadcaster    |
-+-----------+     +------------+     +----------------+
-      |
-      v
++-----------+ +------------+ +----------------+
+| Polling | --> | Real-Time | --> | WebSocket |
+| Service | | Store | | Broadcaster |
++-----------+ +------------+ +----------------+
+|
+v
 Frontend (JS)
-- Map View
-- Timeline View
+
+Map View
+
+Timeline View
+
+yaml
+Copier
+Modifier
 
 ---
 
-## Installation 
+## Installation
 
 ### Clone the repository:
 
 ```bash
 git clone https://github.com/youruser/transit-route-twin.git
 cd transit-route-twin
+Install dependencies:
+Backend (Node.js):
+bash
+Copier
+Modifier
+cd server
+npm install
+Frontend:
+bash
+Copier
+Modifier
+cd ../client
+npm install
+Configuration
+Copy .env.example in the server/ directory and rename it to .env, then update the values:
+
+env
+Copier
+Modifier
+TFL_APP_ID=your_tfl_app_id
+TFL_APP_KEY=your_tfl_app_key
+POLL_INTERVAL_MS=10000
+PORT=3000
+API_BASE_URL=https://api.tfl.gov.uk/Line/{lineId}/Arrivals
+Replace with actual credentials and API endpoints for your city if not using TfL.
+
+Usage
+Start the backend:
+bash
+Copier
+Modifier
+cd server
+npm start
+Start the frontend:
+bash
+Copier
+Modifier
+cd ../client
+npm start
+Open your browser at: http://localhost:8080
+
+API Reference
+GET /route/:lineId/arrivals
+Fetches the latest estimated bus arrivals for a given route.
+
+Sample Response:
+json
+Copier
+Modifier
+[
+  {
+    "vehicleId": "1234",
+    "lineId": "25",
+    "destinationName": "Oxford Circus",
+    "expectedArrival": "2025-05-05T15:32:00Z",
+    "timeToStation": 240
+  }
+]
+How It Works
+🔁 Polling Service
+Sends periodic GET requests to:
+
+arduino
+Copier
+Modifier
+https://api.tfl.gov.uk/Line/{lineId}/Arrivals
+Parses and normalizes the JSON response.
+
+🧠 Real-Time Store
+Maintains an in-memory (or Redis-based) store of predictions. Emits updates only when data changes.
+
+📢 WebSocket Broadcaster
+Broadcasts updated data to all subscribed clients. Each client can subscribe to specific lineIds.
+
+🖥️ Frontend Renderer
+Connects to the WebSocket server and dynamically renders:
+
+Map View: Buses shown as map markers.
+
+Timeline View: Horizontal timeline of expected arrivals.
+
+Contributing
+Contributions are welcome!
+
+Fork the repository
+
+Create your feature branch:
+
+bash
+Copier
+Modifier
+git checkout -b feature/my-feature
+Commit your changes:
+
+bash
+Copier
+Modifier
+git commit -am 'Add my feature'
+Push to the branch:
+
+bash
+Copier
+Modifier
+git push origin feature/my-feature
+Open a Pull Request
+
+License
+MIT License © SFAXI Mohamed Khalil
+
+markdown
+Copier
+Modifier
+
+### Badges Breakdown:
+1. **Node.js Badge**: Shows the supported Node.js version.
+2. **MIT License Badge**: Indicates the license under which the project is released.
+3. **GitHub Repo Badge**: Quick access to the GitHub repository.
