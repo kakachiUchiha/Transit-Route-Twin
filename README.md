@@ -48,32 +48,26 @@ v
 Frontend (JS)
 (Map View / Timeline View)
 
-yaml
-Copier
-Modifier
 
 ---
 
 ## Installation
 
 1. Clone the repository:
-   ```bash
+   
+bash
    git clone https://github.com/youruser/transit-route-twin.git
    cd transit-route-twin
-Install dependencies:
+   
+2. Install dependencies:
 
 Backend (Node.js):
-
 bash
-Copier
-Modifier
 cd server
 npm install
-Frontend:
 
+Frontend:
 bash
-Copier
-Modifier
 cd ../client
 npm install
 Configuration
@@ -138,7 +132,7 @@ Parses and normalizes the JSON response.
 
 Real-Time Store
 Maintains an in-memory or Redis-based store of active predictions.
-Emits updates only when new data differs from the previous state.
+Emits updates only when new data differs from previous state.
 
 WebSocket Broadcaster
 Broadcasts relevant data to all subscribed WebSocket clients.
