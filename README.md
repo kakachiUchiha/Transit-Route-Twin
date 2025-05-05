@@ -42,7 +42,7 @@ Originally built for the Transport for London (TfL) Live Bus Arrivals API, it ca
 ---
 
 ## Architecture
-
+```text
 +-----------+ +------------+ +----------------+
 | Polling | --> | Real-Time | --> | WebSocket |
 | Service | | Store | | Broadcaster |
@@ -55,7 +55,7 @@ Map View
 
 Timeline View
 
-
+```
 
 ---
 
