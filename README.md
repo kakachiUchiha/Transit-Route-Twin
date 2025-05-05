@@ -150,6 +150,21 @@ Map View: Buses shown as map markers.
 Timeline View: Horizontal timeline of expected arrivals.
 
 ---
+## Docker Support
+You can run the entire project using Docker Compose.
+
+Build and Start:
+```bash
+docker-compose up --build
+```
+### Access:
+Frontend: http://localhost:8080
+
+Backend: http://localhost:3000
+
+Make sure your .env file is correctly configured in the server/ folder.
+
+---
 ## Contributing
 Contributions are welcome!
 
