@@ -17,6 +17,7 @@ Simulate real-time bus arrivals and delays for any city’s transit system.
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [API Reference](#api-reference)
+- [Docker Support](#docker-support)
 - [How It Works](#how-it-works)
 - [Contributing](#contributing)
 - [License](#license)
