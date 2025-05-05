@@ -54,36 +54,41 @@ Frontend (JS)
 ## Installation
 
 1. Clone the repository:
-   
-bash
+
+   ```bash
    git clone https://github.com/youruser/transit-route-twin.git
    cd transit-route-twin
-   
 2. Install dependencies:
 
 Backend (Node.js):
-bash
+
 cd server
 npm install
 
 Frontend:
-bash
-cd ../client
-npm install
-Configuration
-Copy and customize the .env.example file inside the server/ directory:
 
-env
+bash
 Copier
 Modifier
+cd ../client
+npm install
+
+---
+
+## Configuration
+
+Copy and customize the .env.example file inside the server/ directory:
 TFL_APP_ID=your_tfl_app_id
 TFL_APP_KEY=your_tfl_app_key
 POLL_INTERVAL_MS=10000
 PORT=3000
 API_BASE_URL=https://api.tfl.gov.uk/Line/{lineId}/Arrivals
-Replace with appropriate values depending on your transit API provider.
 
-Usage
+Replace the placeholder values with actual credentials or endpoints depending on your transit API provider.
+
+---
+
+## Usage
 Start the backend:
 
 bash
@@ -91,25 +96,20 @@ Copier
 Modifier
 cd server
 npm start
-Start the frontend:
 
-bash
-Copier
-Modifier
+Start the frontend:
 cd ../client
 npm start
 Then open your browser at:
 http://localhost:8080
 
-API Reference
+---
+
+## API Reference
 GET /route/:lineId/arrivals
 Fetch the latest list of estimated bus arrivals for a given route.
 
 Response:
-
-json
-Copier
-Modifier
 [
   {
     "vehicleId": "1234",
@@ -120,43 +120,45 @@ Modifier
   },
   ...
 ]
-How It Works
-Polling Service
-Sends periodic GET requests to the configured transit API:
 
-arduino
-Copier
-Modifier
+---
+## How It Works
+### Polling Service
+Sends periodic GET requests to the configured transit API:
 https://api.tfl.gov.uk/Line/{lineId}/Arrivals
+
 Parses and normalizes the JSON response.
 
-Real-Time Store
+### Real-Time Store
 Maintains an in-memory or Redis-based store of active predictions.
-Emits updates only when new data differs from previous state.
+Emits updates only when new data differs from the previous state.
 
-WebSocket Broadcaster
+### WebSocket Broadcaster
 Broadcasts relevant data to all subscribed WebSocket clients.
 Each client can subscribe to one or more lineIds.
 
-Frontend Renderer
+### Frontend Renderer
 Connects to the WebSocket server and dynamically renders:
 
 Map View: Buses shown as markers on a map.
 
 Timeline View: Horizontal timeline of upcoming arrivals.
 
-Contributing
+---
+## Contributing
 Contributions are welcome!
 
-Fork the repository
+1. Fork the repository
 
-Create your feature branch (git checkout -b feature/my-feature)
+2. Create your feature branch
+    git checkout -b feature/my-feature
+3. Commit your changes
+   git commit -am 'Add my feature'
+4. Push to the branch
+   git push origin feature/my-feature
+5. Open a Pull Request
 
-Commit your changes (git commit -am 'Add my feature')
+--- 
+### License
+MIT License © SFAXI Mohamed Khalil
 
-Push to the branch (git push origin feature/my-feature)
-
-Open a Pull Request
-
-License
-MIT License © Your Name
