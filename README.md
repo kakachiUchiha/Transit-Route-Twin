@@ -1,195 +1,160 @@
-# Transit-Route Twin
+# 🚌 Transit-Route Twin – Digital Twin for Bus Arrival Simulation (TfL + FIWARE)
 
 ![Node.js](https://img.shields.io/badge/Node.js-12.x-brightgreen)
 ![MIT License](https://img.shields.io/badge/License-MIT-blue)
 ![GitHub Repo](https://img.shields.io/badge/Repo-GitHub-blue)
 
-Simulate real-time bus arrivals and delays for any city’s transit system.
-
+> A lightweight digital twin system that simulates real-time bus arrivals and delays in London by polling the TfL API, translating data to NGSI format, and storing it in FIWARE Orion Context Broker for visualization and consumption.
 ---
-
 ## Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Docker Support](#docker-support)
-- [How It Works](#how-it-works)
-- [Contributing](#contributing)
-- [License](#license)
+- [Contexte du Projet](#1. Contexte du Projet)
+- [Architecture de la Solution](#2. Architecture de la Solution)
+- [Modèle de Données JSON (NGSI v2)](#3. Modèle de Données JSON (NGSI v2))
+- [Installation avec Docker Compose](#4. Installation avec Docker Compose)
+- [Lancer l'Application](#5. Lancer l'Application)
+- [Résultats](#6. Résultats)
+- [Conclusion](#7. Conclusion)
+- [Auteur](#Auteur)
+
+---
+##  1. Contexte du Projet
+
+Ce projet s’inscrit dans le cadre de l’exploration des **Digital Twins (Jumeaux Numériques)** appliqués aux systèmes de transport urbains intelligents.
+
+L'objectif est de :
+- Simuler en temps réel les **arrivées de bus** à un arrêt donné à Londres.
+- Traduire ces données vers un format **NGSI v2** compatible avec FIWARE.
+- Les stocker dans **Orion Context Broker**, une base de contexte dynamique.
+- Visualiser ces données via des requêtes API (Postman/cURL) ou une interface frontale.
+
+> 🏙️ Le Digital Twin ici représente un "reflet numérique" du réseau de transport de Londres, synchronisé avec les données temps réel du **Transport for London (TfL) API**.
 
 ---
 
-## Overview
+##  2. Architecture de la Solution
 
-**Transit-Route Twin** is a lightweight service that simulates live bus arrivals and delays by polling a public transit API, storing the results in real time, and broadcasting updates via WebSockets.
 
-Originally built for the Transport for London (TfL) Live Bus Arrivals API, it can be easily adapted for any city's transit system.
-
----
-
-## Features
-
-- 🚍 **Real-Time Polling**: Periodically fetches next-bus ETAs for a given route.
-- 📡 **WebSocket Broadcasting**: Instantly pushes updates to all connected clients.
-- 🗺️ **Flexible Frontend**: Renders interactive maps or timelines using JavaScript.
-- 🧩 **Modular Design**: Clean separation of polling, storage, and rendering logic.
-- 💡 **Lightweight**: Minimal resource usage, standardized JSON, no special hardware required.
+| composant de l'architecture        |Rôle                                                               |
+|------------------------------------|-------------------------------------------------------------------|
+| Orion Context Broker               | Cœur du jumeau numérique (stocke et diffuse le contexte en NGSI)  |
+| MongoDB                            | Backend utilisé par Orion pour persister les entités              |
+|NGSI Proxy                          | Connecte l’API TfL à Orion en traduisant les données              | 
+|Postman / cURL                      | Tester les requêtes NGSI v2 vers Orion                            | 
+|Frontend React                      | 	Affiche les arrivées de bus depuis Orion en temps réel           | 
 
 ---
 
-## Architecture
-```text
-+-----------+ +------------+ +----------------+
-| Polling | --> | Real-Time | --> | WebSocket |
-| Service | | Store | | Broadcaster |
-+-----------+ +------------+ +----------------+
-|
-v
-Frontend (JS)
+##  3. Modèle de Données JSON (NGSI v2)
 
-Map View
+Exemple d'entité envoyée à Orion :
 
-Timeline View
-
-```
-
----
-
-## Installation
-
-### Clone the repository:
-
-```bash
-git clone https://github.com/youruser/transit-route-twin.git
-cd transit-route-twin
-```
-
-### Install dependencies:
-
-Backend (Node.js):
-```bash
-cd server
-npm install
-```
-Frontend:
-```bash
-cd ../client
-npm install
-```
----
-## Configuration
-Copy .env.example in the server/ directory and rename it to .env, then update the values:
-
-```env
-
-TFL_APP_ID=your_tfl_app_id
-TFL_APP_KEY=your_tfl_app_key
-POLL_INTERVAL_MS=10000
-PORT=3000
-API_BASE_URL=https://api.tfl.gov.uk/Line/{lineId}/Arrivals
-```
-Replace with actual credentials and API endpoints for your city if not using TfL.
----
-## Usage
-Start the backend:
-```bash
-cd server
-npm start
-```
-Start the frontend:
-```bash
-cd ../client
-npm start
-```
-Open your browser at: http://localhost:8080
----
-## API Reference
-```bash
-GET /route/:lineId/arrivals
-```
-Fetches the latest estimated bus arrivals for a given route.
-
-Sample Response:
 ```json
-
-[
-  {
-    "vehicleId": "1234",
-    "lineId": "25",
-    "destinationName": "Oxford Circus",
-    "expectedArrival": "2025-05-05T15:32:00Z",
-    "timeToStation": 240
+{
+  "id": "BusStop-490008660N",
+  "type": "BusStop",
+  "name": {
+    "value": "Shoreditch High Street",
+    "type": "Text"
+  },
+  "arrivals": {
+    "value": [
+      { "line": "25", "arrivalTime": "2025-05-19T12:36:00Z" },
+      { "line": "205", "arrivalTime": "2025-05-19T12:42:00Z" }
+    ],
+    "type": "StructuredValue"
+  },
+  "timestamp": {
+    "value": "2025-05-19T12:30:00Z",
+    "type": "DateTime"
   }
-]
+}
 ```
 ---
-## How It Works
-### 🔁 Polling Service
-Sends periodic GET requests to:
+## 4. Installation avec Docker Compose 
+Prérequis
+[Docker](https://docs.docker.com/get-docker/)
+[Docker Compose](https://docs.docker.com/compose/install/)
+### Fichier docker-compose.yml
+```yaml
+version: "3.7"
 
-```arduino
+services:
+  orion:
+    image: fiware/orion
+    container_name: fiware-orion
+    depends_on:
+      - mongo
+    ports:
+      - "1026:1026"
+    command: -dbhost mongo
+    networks:
+      - fiware
 
-https://api.tfl.gov.uk/Line/{lineId}/Arrivals
+  mongo:
+    image: mongo:4.4
+    container_name: db-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - fiware
+
+networks:
+  fiware:
+    driver: bridge
 ```
-Parses and normalizes the JSON response.
-### 🧠 Real-Time Store
-Maintains an in-memory (or Redis-based) store of predictions. Emits updates only when data changes.
 
-### 📢 WebSocket Broadcaster
-Broadcasts updated data to all subscribed clients. Each client can subscribe to specific lineIds.
-
-### 🖥️ Frontend Renderer
-Connects to the WebSocket server and dynamically renders:
-
-Map View: Buses shown as map markers.
-
-Timeline View: Horizontal timeline of expected arrivals.
+Ce fichier lance :
+#### MongoDB : base de données pour stocker les entités de contexte.
+#### Orion Context Broker : serveur de contexte NGSI.
+---
+## 5. Lancer l'Application
+### 1. Démarrer Orion et MongoDB
+```bash
+docker-compose up -d
+```
+### 2. Vérifier que Orion fonctionne
+```bash
+dcurl http://localhost:1026/version
+```
+### 3. Injecter des données simulées depuis TfL
+Utilise un script Python ou cURL pour parser et transformer les données de TfL en JSON NGSI et les injecter dans Orion :
+```bash
+curl -iX POST \
+  'http://localhost:1026/v2/entities' \
+  -H 'Content-Type: application/json' \
+  -H 'Fiware-Service: transit' \
+  -H 'Fiware-ServicePath: /london' \
+  -d @bus_stop_entity.json
+```
+Tu peux aussi utiliser Postman avec les mêmes headers pour tester l'API.
 
 ---
-## Docker Support
-You can run the entire project using Docker Compose.
-
-Build and Start:
+## 6. Résultats 
+###  Lecture d’une entité
 ```bash
-docker-compose up --build
+curl -X GET \
+  'http://localhost:1026/v2/entities/BusStop-490008660N?options=keyValues' \
+  -H 'Fiware-Service: transit' \
+  -H 'Fiware-ServicePath: /london'
 ```
-### Access:
-Frontend: http://localhost:8080
-
-Backend: http://localhost:3000
-
-Make sure your .env file is correctly configured in the server/ folder.
-
----
-## Contributing
-Contributions are welcome!
-
-1. Fork the repository
-
-2. Create your feature branch:
-
-```bash
-
-git checkout -b feature/my-feature
+#### Résultat :
+```json
+{
+  "id": "BusStop-490008660N",
+  "type": "BusStop",
+  "name": "Shoreditch High Street",
+  "arrivals": [
+    { "line": "25", "arrivalTime": "2025-05-19T12:36:00Z" },
+    { "line": "205", "arrivalTime": "2025-05-19T12:42:00Z" }
+  ],
+  "timestamp": "2025-05-19T12:30:00Z"
+}
 ```
-3. Commit your changes:
+## 7. Conclusion
+Ce projet montre l’application concrète d’un jumeau numérique urbain, à l’aide d’un outil standard de gestion de contexte dynamique (Orion Context Broker). Il peut facilement être étendu à d’autres villes ou sources de données. Il respecte le paradigme Digital Twin : répliquer, suivre et comprendre un système physique à distance, en temps réel.
 
-```bash
-
-git commit -am 'Add my feature'
-```
-4. Push to the branch:
-```bash
-git push origin feature/my-feature
-```
-5. Open a Pull Request
-
----
-### License
-MIT License © SFAXI Mohamed Khalil
+### Auteur
+Projet réalisé dans le cadre du module “Digital Twin” 
+Université SUP'COM 🇹🇳
 
