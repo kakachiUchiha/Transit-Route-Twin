@@ -8,17 +8,17 @@
 ---
 ## Table of Contents
 
-- [Contexte du Projet](#1._Contexte_du_Projet)
-- [Architecture de la Solution](#2._Architecture_de_la_Solution)
-- [Modèle de Données JSON (NGSI v2)](#3._Modèle_de_Données_JSON (NGSI v2))
-- [Installation avec Docker Compose](#4._Installation_avec_Docker_Compose)
-- [Lancer l'Application](#5._Lancer_l'Application)
-- [Résultats](#6._Résultats)
-- [Conclusion](#7._Conclusion)
+- [Contexte du Projet](#Contexte_du_Projet)
+- [Architecture de la Solution](#Architecture_de_la_Solution)
+- [Modèle de Données JSON (NGSI v2)](#Modèle_de_Données_JSON (NGSI v2))
+- [Installation avec Docker Compose](#Installation_avec_Docker_Compose)
+- [Lancer l'Application](#Lancer_l'Application)
+- [Résultats](#Résultats)
+- [Conclusion](#Conclusion)
 - [Auteur](#Auteur)
 
 ---
-##  1. Contexte du Projet
+## Contexte du Projet
 
 Ce projet s’inscrit dans le cadre de l’exploration des **Digital Twins (Jumeaux Numériques)** appliqués aux systèmes de transport urbains intelligents.
 
@@ -32,7 +32,7 @@ L'objectif est de :
 
 ---
 
-##  2. Architecture de la Solution
+## Architecture de la Solution
 
 
 | composant de l'architecture        |Rôle                                                               |
@@ -45,7 +45,7 @@ L'objectif est de :
 
 ---
 
-##  3. Modèle de Données JSON (NGSI v2)
+## Modèle de Données JSON (NGSI v2)
 
 Exemple d'entité envoyée à Orion :
 
@@ -71,9 +71,10 @@ Exemple d'entité envoyée à Orion :
 }
 ```
 ---
-## 4. Installation avec Docker Compose 
+## Installation avec Docker Compose 
 > Prérequis
 [Docker](https://docs.docker.com/get-docker/)
+
 [Docker Compose](https://docs.docker.com/compose/install/)
 ### Fichier docker-compose.yml
 ```yaml
@@ -108,7 +109,7 @@ Ce fichier lance :
 #### MongoDB : base de données pour stocker les entités de contexte.
 #### Orion Context Broker : serveur de contexte NGSI.
 ---
-## 5. Lancer l'Application
+## Lancer l'Application
 ### 1. Démarrer Orion et MongoDB
 ```bash
 docker-compose up -d
@@ -130,7 +131,7 @@ curl -iX POST \
 Tu peux aussi utiliser Postman avec les mêmes headers pour tester l'API.
 
 ---
-## 6. Résultats 
+## Résultats 
 ###  Lecture d’une entité
 ```bash
 curl -X GET \
@@ -151,7 +152,7 @@ curl -X GET \
   "timestamp": "2025-05-19T12:30:00Z"
 }
 ```
-## 7. Conclusion
+## Conclusion
 Ce projet montre l’application concrète d’un jumeau numérique urbain, à l’aide d’un outil standard de gestion de contexte dynamique (Orion Context Broker). Il peut facilement être étendu à d’autres villes ou sources de données. Il respecte le paradigme Digital Twin : répliquer, suivre et comprendre un système physique à distance, en temps réel.
 
 ### Auteur
