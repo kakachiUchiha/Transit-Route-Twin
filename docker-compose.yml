@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  orion:
+    image: fiware/orion
+    container_name: fiware-orion
+    depends_on:
+      - mongo
+    ports:
+      - "1026:1026"
+    command: -dbhost mongo
+    networks:
+      - fiware
+
+  mongo:
+    image: mongo:4.4
+    container_name: db-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - fiware
+
+networks:
+  fiware:
+    driver: bridge
