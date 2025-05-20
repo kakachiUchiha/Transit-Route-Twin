@@ -33,7 +33,9 @@ L'objectif est de :
 ---
 
 ## Architecture de la Solution
+Voici l’architecture du Digital Twin utilisé :
 
+![Architecture du système](images/architecture.png)
 
 | composant de l'architecture        |Rôle                                                               |
 |------------------------------------|-------------------------------------------------------------------|
