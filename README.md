@@ -10,7 +10,7 @@
 
 - [Contexte du Projet](#contexte-du-projet)
 - [Architecture de la Solution](#architecture-de-la-Solution)
-- [Modèle de Données JSON (NGSI v2)](#modèle-de-données_JSON (NGSI v2))
+- [Modèle de Données JSON (NGSI v2)](#modèle-de-données-json-ngsi-v2)
 - [Installation avec Docker Compose](#installation-avec-docker-compose)
 - [Lancer l'Application](#Lancer-lapplication)
 - [Résultats](#résultats)
@@ -157,5 +157,6 @@ Ce projet montre l’application concrète d’un jumeau numérique urbain, à l
 
 ### Auteur
 Projet réalisé dans le cadre du module “Digital Twin” 
+SFAXI Mohamed Khalil
 Université SUP'COM 🇹🇳
 
