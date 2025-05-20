@@ -8,13 +8,13 @@
 ---
 ## Table of Contents
 
-- [Contexte du Projet](#1. Contexte du Projet)
-- [Architecture de la Solution](#2. Architecture de la Solution)
-- [Modèle de Données JSON (NGSI v2)](#3. Modèle de Données JSON (NGSI v2))
-- [Installation avec Docker Compose](#4. Installation avec Docker Compose)
-- [Lancer l'Application](#5. Lancer l'Application)
-- [Résultats](#6. Résultats)
-- [Conclusion](#7. Conclusion)
+- [Contexte du Projet](#1._Contexte_du_Projet)
+- [Architecture de la Solution](#2._Architecture_de_la_Solution)
+- [Modèle de Données JSON (NGSI v2)](#3._Modèle_de_Données_JSON (NGSI v2))
+- [Installation avec Docker Compose](#4._Installation_avec_Docker_Compose)
+- [Lancer l'Application](#5._Lancer_l'Application)
+- [Résultats](#6._Résultats)
+- [Conclusion](#7._Conclusion)
 - [Auteur](#Auteur)
 
 ---
@@ -72,7 +72,7 @@ Exemple d'entité envoyée à Orion :
 ```
 ---
 ## 4. Installation avec Docker Compose 
-Prérequis
+> Prérequis
 [Docker](https://docs.docker.com/get-docker/)
 [Docker Compose](https://docs.docker.com/compose/install/)
 ### Fichier docker-compose.yml
